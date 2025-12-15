@@ -1,0 +1,36 @@
+{
+  "name": "Claude Code Dev Container",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "mounts": [
+    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/vscode/.ssh,readonly,type=bind,consistency=cached",
+    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.gitconfig,target=/home/vscode/.gitconfig,readonly,type=bind,consistency=cached"
+  ],
+  "containerEnv": {
+    "ANTHROPIC_AUTH_TOKEN": "${localEnv:ANTHROPIC_AUTH_TOKEN}",
+    "ANTHROPIC_BASE_URL": "${localEnv:ANTHROPIC_BASE_URL}",
+    "API_TIMEOUT_MS": "${localEnv:API_TIMEOUT_MS}",
+    "ANTHROPIC_MODEL": "${localEnv:ANTHROPIC_MODEL}",
+    "ANTHROPIC_SMALL_FAST_MODEL": "${localEnv:ANTHROPIC_SMALL_FAST_MODEL}",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "${localEnv:CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC}"
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.profiles.linux": {
+          "zsh": {
+            "path": "/bin/zsh"
+          }
+        }
+      },
+      "extensions": []
+    }
+  },
+  "postCreateCommand": "~/.local/bin/init-claude.sh && echo '=== Verifying Development Environment ===' && claude --version && echo 'Claude Code: ✓' && zsh --version && echo 'Zsh: ✓' && python --version && echo 'Python: ✓' && go version && echo 'Go: ✓' && ruby --version && echo 'Ruby: ✓' && node --version && echo 'Node.js: ✓' && npm --version && echo 'npm: ✓' && git --version && echo 'Git: ✓' && tig --version && echo 'Tig: ✓' && ssh -V && echo 'SSH: ✓' && echo '=== All tools installed successfully ==='",
+  "remoteUser": "vscode",
+  "features": {},
+  "workspaceFolder": "/workspace",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+}

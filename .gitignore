@@ -1,0 +1,42 @@
+# Environment variables (contains secrets)
+.env
+.devcontainer/.env
+
+# Node modules
+node_modules/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+venv/
+env/
+ENV/
+
+# Ruby
+*.gem
+*.rbc
+.bundle/
+vendor/bundle/
+
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude Code
+.claude/
