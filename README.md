@@ -70,30 +70,6 @@ ANTHROPIC_SMALL_FAST_MODEL=claude-4.5-sonnet
 CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
 ```
 
-#### 方式 B：完全使用宿主机环境变量
-
-如果你不想使用 .env 文件，可以将所有配置都设置在宿主机环境变量中：
-
-**macOS/Linux**：添加到 `~/.zshrc` 或 `~/.bashrc`
-```bash
-export ANTHROPIC_AUTH_TOKEN=sk-your-actual-token-here
-export ANTHROPIC_BASE_URL=https://api.anthropic.com
-export API_TIMEOUT_MS=600000
-export ANTHROPIC_MODEL=claude-4.5-sonnet
-export ANTHROPIC_SMALL_FAST_MODEL=claude-4.5-sonnet
-export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
-```
-
-**Windows**：在系统环境变量中设置，或在 PowerShell 配置文件中添加
-```powershell
-[System.Environment]::SetEnvironmentVariable('ANTHROPIC_AUTH_TOKEN', 'sk-your-token', 'User')
-[System.Environment]::SetEnvironmentVariable('ANTHROPIC_BASE_URL', 'https://api.anthropic.com', 'User')
-[System.Environment]::SetEnvironmentVariable('API_TIMEOUT_MS', '600000', 'User')
-[System.Environment]::SetEnvironmentVariable('ANTHROPIC_MODEL', 'claude-4.5-sonnet', 'User')
-[System.Environment]::SetEnvironmentVariable('ANTHROPIC_SMALL_FAST_MODEL', 'claude-4.5-sonnet', 'User')
-[System.Environment]::SetEnvironmentVariable('CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC', '1', 'User')
-```
-
 ### 2. 在容器中打开项目
 
 1. 在 VS Code 中打开此文件夹
@@ -296,7 +272,3 @@ A: 容器已经挂载了你的 SSH 密钥和 git 配置，直接使用 `git comm
 
 此 devcontainer 配置按原样提供，用于开发目的。
 
-## 相关文档
-
-- [TESTING.md](TESTING.md) - 测试指南和故障排除详细说明
-- [README.md](README.md) - 英文版文档
