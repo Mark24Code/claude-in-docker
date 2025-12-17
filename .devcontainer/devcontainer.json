@@ -34,6 +34,7 @@
     }
   },
   "postCreateCommand": "chmod 600 ~/.ssh/* 2>/dev/null || true && chmod 700 ~/.ssh 2>/dev/null || true && ~/.local/bin/init-claude.sh && echo '=== Verifying Development Environment ===' && claude --version && echo 'Claude Code: ✓' && zsh --version && echo 'Zsh: ✓' && python --version && echo 'Python: ✓' && go version && echo 'Go: ✓' && ruby --version && echo 'Ruby: ✓' && node --version && echo 'Node.js: ✓' && npm --version && echo 'npm: ✓' && git --version && echo 'Git: ✓' && tig --version && echo 'Tig: ✓' && ssh -V && echo 'SSH: ✓' && ssh-add -l 2>/dev/null && echo 'SSH Agent: ✓' || echo 'SSH Agent: (no keys loaded)' && echo '=== All tools installed successfully ==='",
+  "postStartCommand": "/workspace/.devcontainer/auto-install-node.sh",
   "remoteUser": "vscode",
   "runArgs": ["--network=host"],
   "features": {

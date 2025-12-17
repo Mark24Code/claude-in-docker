@@ -47,14 +47,25 @@ ENV PATH="${GOPATH}/bin:${PATH}"
 USER $USERNAME
 WORKDIR /home/$USERNAME
 
-# Install Node.js 24.12.0 via nvm
+# Install multiple Node.js versions via nvm
 ENV NVM_DIR="/home/${USERNAME}/.nvm"
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash \
     && . "$NVM_DIR/nvm.sh" \
+    && nvm install 14.21.3 \
+    && nvm install 16.20.2 \
+    && nvm install 18.20.8 \
+    && nvm install 20.19.6 \
+    && nvm install 22.21.1 \
     && nvm install 24.12.0 \
-    && nvm alias default 24.12.0 \
-    && nvm use default
-ENV PATH="${NVM_DIR}/versions/node/v24.12.0/bin:${PATH}"
+    && nvm alias default 22.21.1 \
+    && nvm use default \
+    && nvm use 14.21.3 && npm install -g pnpm yarn \
+    && nvm use 16.20.2 && npm install -g pnpm yarn \
+    && nvm use 18.20.8 && npm install -g pnpm yarn \
+    && nvm use 20.19.6 && npm install -g pnpm yarn \
+    && nvm use 22.21.1 && npm install -g pnpm yarn \
+    && nvm use 24.12.0 && npm install -g pnpm yarn
+ENV PATH="${NVM_DIR}/versions/node/v22.21.1/bin:${PATH}"
 
 # Install Python 3.13.1 via pyenv
 ENV PYENV_ROOT="/home/${USERNAME}/.pyenv"
