@@ -92,8 +92,8 @@ ENV PATH="${RBENV_ROOT}/shims:${PATH}"
 # Install oh-my-zsh
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
-# Install Claude Code globally via npm
-RUN . "$NVM_DIR/nvm.sh" && npm install -g @anthropic-ai/claude-code
+# Install Claude Code using official installer (independent of Node.js version)
+RUN curl -fsSL https://claude.ai/install.sh | bash
 
 # Create necessary directories
 RUN mkdir -p /home/$USERNAME/.local/bin
