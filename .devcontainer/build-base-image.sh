@@ -20,7 +20,7 @@ echo ""
 # 构建基础镜像
 echo "步骤 1/3: 构建基础镜像..."
 cd "$(dirname "$0")"
-docker build -f Dockerfile.base -t ${IMAGE_NAME}:${TAG} .
+docker buildx build --platform linux/amd64,linux/arm64 -f Dockerfile.base -t ${IMAGE_NAME}:${TAG} .
 docker tag ${IMAGE_NAME}:${TAG} ${FULL_IMAGE_NAME}
 
 echo ""
