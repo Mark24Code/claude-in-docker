@@ -81,16 +81,25 @@ ENV PATH="${RBENV_ROOT}/shims:${PATH}"
 # Install oh-my-zsh
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
-# Configure zsh with plugins (git and z)
-RUN sed -i 's/plugins=(git)/plugins=(git z)/' ~/.zshrc
+# Copy default zsh configuration
+COPY --chown=$USERNAME:$USERNAME default.zshrc /home/$USERNAME/.zshrc.container
+COPY --chown=$USERNAME:$USERNAME container.additions.zshrc /home/$USERNAME/.zshrc.container.additions
 
-# Add .env file loading to .zshrc
-RUN echo '' >> ~/.zshrc \
-    && echo '# Load environment variables from .env file if it exists' >> ~/.zshrc \
-    && echo 'if [ -f /workspace/.devcontainer/.env ]; then' >> ~/.zshrc \
-    && echo '  set -a' >> ~/.zshrc \
-    && echo '  source /workspace/.devcontainer/.env' >> ~/.zshrc \
-    && echo '  set +a' >> ~/.zshrc \
+# Create smart .zshrc loader that prioritizes host config
+RUN echo '# Smart Zsh Configuration Loader' > ~/.zshrc \
+    && echo '# This checks for host .zshrc and falls back to container default' >> ~/.zshrc \
+    && echo '' >> ~/.zshrc \
+    && echo '# Check if host .zshrc exists (mounted from host)' >> ~/.zshrc \
+    && echo 'if [ -f ~/.zshrc.host ]; then' >> ~/.zshrc \
+    && echo '  # Load host configuration' >> ~/.zshrc \
+    && echo '  source ~/.zshrc.host' >> ~/.zshrc \
+    && echo '  # Optionally add container-specific additions' >> ~/.zshrc \
+    && echo '  if [ -f ~/.zshrc.container.additions ]; then' >> ~/.zshrc \
+    && echo '    source ~/.zshrc.container.additions' >> ~/.zshrc \
+    && echo '  fi' >> ~/.zshrc \
+    && echo 'else' >> ~/.zshrc \
+    && echo '  # No host config found, use container default' >> ~/.zshrc \
+    && echo '  source ~/.zshrc.container' >> ~/.zshrc \
     && echo 'fi' >> ~/.zshrc
 
 # Install Claude Code globally via npm
@@ -98,7 +107,9 @@ RUN . "$NVM_DIR/nvm.sh" && npm install -g @anthropic-ai/claude-code
 
 # Copy and setup Claude initialization script
 COPY --chown=$USERNAME:$USERNAME init-claude.sh /home/$USERNAME/.local/bin/init-claude.sh
+COPY --chown=$USERNAME:$USERNAME test-config.sh /home/$USERNAME/.local/bin/test-config.sh
 RUN chmod +x /home/$USERNAME/.local/bin/init-claude.sh \
+    && chmod +x /home/$USERNAME/.local/bin/test-config.sh \
     && mkdir -p /home/$USERNAME/.local/bin
 
 # Set working directory

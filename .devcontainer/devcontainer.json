@@ -4,9 +4,11 @@
     "dockerfile": "Dockerfile"
   },
   "mounts": [
-    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/vscode/.ssh,readonly,type=bind,consistency=cached",
-    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.gitconfig,target=/home/vscode/.gitconfig,readonly,type=bind,consistency=cached"
+    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached",
+    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.gitconfig,target=/home/vscode/.gitconfig,type=bind,consistency=cached",
+    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.zshrc,target=/home/vscode/.zshrc.host,type=bind,consistency=cached"
   ],
+  "initializeCommand": ".devcontainer/init-command.sh",
   "containerEnv": {
     "ANTHROPIC_AUTH_TOKEN": "${localEnv:ANTHROPIC_AUTH_TOKEN}",
     "ANTHROPIC_BASE_URL": "${localEnv:ANTHROPIC_BASE_URL}",
@@ -28,9 +30,14 @@
       "extensions": []
     }
   },
-  "postCreateCommand": "~/.local/bin/init-claude.sh && echo '=== Verifying Development Environment ===' && claude --version && echo 'Claude Code: ✓' && zsh --version && echo 'Zsh: ✓' && python --version && echo 'Python: ✓' && go version && echo 'Go: ✓' && ruby --version && echo 'Ruby: ✓' && node --version && echo 'Node.js: ✓' && npm --version && echo 'npm: ✓' && git --version && echo 'Git: ✓' && tig --version && echo 'Tig: ✓' && ssh -V && echo 'SSH: ✓' && echo '=== All tools installed successfully ==='",
+  "postCreateCommand": "chmod 600 ~/.ssh/* 2>/dev/null || true && chmod 700 ~/.ssh 2>/dev/null || true && ~/.local/bin/init-claude.sh && echo '=== Verifying Development Environment ===' && claude --version && echo 'Claude Code: ✓' && zsh --version && echo 'Zsh: ✓' && python --version && echo 'Python: ✓' && go version && echo 'Go: ✓' && ruby --version && echo 'Ruby: ✓' && node --version && echo 'Node.js: ✓' && npm --version && echo 'npm: ✓' && git --version && echo 'Git: ✓' && tig --version && echo 'Tig: ✓' && ssh -V && echo 'SSH: ✓' && ssh-add -l 2>/dev/null && echo 'SSH Agent: ✓' || echo 'SSH Agent: (no keys loaded)' && echo '=== All tools installed successfully ==='",
   "remoteUser": "vscode",
-  "features": {},
+  "runArgs": ["--network=host"],
+  "features": {
+    "ghcr.io/devcontainers/features/sshd:1": {
+      "version": "latest"
+    }
+  },
   "workspaceFolder": "/workspace",
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
 }
