@@ -1,7 +1,10 @@
 {
   "name": "Claude Code Dev Container",
   "build": {
-    "dockerfile": "Dockerfile"
+    "dockerfile": "Dockerfile",
+    "args": {
+      "BASE_IMAGE": "mark24code/claude-in-docker:latest"
+    }
   },
   "mounts": [
     "source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached",

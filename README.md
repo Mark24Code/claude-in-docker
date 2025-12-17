@@ -20,7 +20,55 @@
 2. 安装 [VS Code](https://code.visualstudio.com/) 及 [Dev Containers 扩展](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 3. 获取 Anthropic API Token
 
+## 镜像构建策略
+
+本项目采用两阶段 Docker 构建策略，以提高构建效率：
+
+### 基础镜像（Dockerfile.base）
+包含所有系统依赖和开发工具：
+- 系统包和编译工具
+- Python 3.13.1（通过 pyenv）
+- Go 1.23.4
+- Node.js 24.12.0（通过 nvm）
+- Ruby 3.4.1（通过 rbenv）
+- zsh + oh-my-zsh
+- Claude Code
+
+**维护者**：通常由项目维护者构建并推送到 Docker Hub，团队成员直接使用。
+
+### 使用镜像（Dockerfile）
+基于基础镜像，添加项目特定配置：
+- zsh 配置文件
+- Claude Code 初始化脚本
+- 项目相关的启动脚本
+
+**用户**：团队成员使用该 Dockerfile，构建速度大幅提升（从 10 分钟降至 1 分钟）。
+
 ## 快速开始
+
+### 0. 构建和推送基础镜像（仅维护者需要）
+
+如果你是项目维护者，需要先构建并推送基础镜像：
+
+```bash
+cd .devcontainer
+./build-base-image.sh
+```
+
+默认会构建并推送到 `mark24code/claude-in-docker:latest`。如需使用其他 Docker Hub 账号，可以指定参数：
+
+```bash
+./build-base-image.sh your-dockerhub-username
+```
+
+按照提示操作：
+1. 脚本会构建基础镜像（耗时约 5-10 分钟）
+2. 选择是否登录 Docker Hub
+3. 选择是否推送镜像到远程仓库
+
+推送成功后，如果使用了自定义用户名，需要编辑以下文件中的镜像地址：
+- `.devcontainer/Dockerfile`：修改 `BASE_IMAGE` 参数为 `your-dockerhub-username/claude-in-docker:latest`
+- `.devcontainer/devcontainer.json`：修改 `build.args.BASE_IMAGE` 为相同值
 
 ### 1. 配置环境变量（必须）
 
@@ -72,10 +120,26 @@ CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
 
 ### 2. 在容器中打开项目
 
+**对于普通用户（推荐）**：
+
+由于基础镜像已经推送到 Docker Hub (`mark24code/claude-in-docker:latest`)，你可以直接使用而无需重新构建：
+
 1. 在 VS Code 中打开此文件夹
 2. 按 `F1` 并选择 `Dev Containers: Reopen in Container`
-3. 等待容器构建（首次构建需要 5-10 分钟）
+3. 等待容器启动（首次启动约需 1-2 分钟，会自动拉取基础镜像）
 4. 构建完成后，你将拥有一个完全配置好的开发环境
+
+**对于本地构建（可选）**：
+
+如果无法访问 Docker Hub 或想使用本地构建的镜像：
+
+1. 先本地构建基础镜像：
+```bash
+cd .devcontainer
+docker build -f Dockerfile.base -t mark24code/claude-in-docker:latest .
+```
+
+2. 然后在 VS Code 中重新打开容器
 
 容器启动时会自动执行初始化脚本：
 - 设置 Claude Code 配置（`~/.claude.json`）
