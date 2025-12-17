@@ -2,6 +2,25 @@
 
 一个完整的 Claude Code 开发容器，支持多种编程语言和完全配置的 zsh 环境。
 
+## 直接使用
+
+Mac/Linux
+
+```
+curl -L https://github.com/Mark24Code/claude-in-docker/archive/refs/heads/main.tar.gz | \
+  tar -xz --strip-components=1 "claude-in-docker-main/.devcontainer"
+```
+
+Windows 10+
+
+```
+# 方法1：使用 curl 和 tar（Windows 10+）
+curl -L https://github.com/Mark24Code/claude-in-docker/archive/refs/heads/main.tar.gz -o temp.tar.gz
+tar -xzf temp.tar.gz --strip-components=1 "claude-in-docker-main/.devcontainer"
+Remove-Item temp.tar.gz
+```
+
+
 ## 功能特性
 
 - **Shell**：zsh + oh-my-zsh（包含 git 和 z 插件）
